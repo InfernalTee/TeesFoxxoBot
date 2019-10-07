@@ -1,8 +1,8 @@
 from teesfoxxobot.logger import log
 from teesfoxxobot.config import API_KEY
-from teesfoxxobot.handlers import on_command_help
+from teesfoxxobot.handlers import on_command_help, on_admin
 from telegram.ext import (
-    Updater, InlineQueryHandler, MessageHandler, CommandHandler, Filters
+    Updater, InlineQueryHandler, CommandHandler, Filters
 )
 
 
@@ -14,6 +14,9 @@ def start():
 
     # TODO register handlers here
     dp.add_handler(CommandHandler("help", on_command_help))
+
+    # Register /admin
+    dp.add_handler(CommandHandler("admin", on_admin))
 
     log.info("Bot ready, dood! Connected as {username} (with ID {id}).".format(
         username=bot.bot.username,
