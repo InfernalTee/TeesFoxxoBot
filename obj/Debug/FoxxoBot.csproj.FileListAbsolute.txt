@@ -1,0 +1,13 @@
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\FoxxoBot.exe.config
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\FoxxoBot.exe
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\FoxxoBot.pdb
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\FoxxoBot.exe.CodeAnalysisLog.xml
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\FoxxoBot.exe.lastcodeanalysissucceeded
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\Telegram.Bot.dll
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Pyrot\Desktop\FoxxoBot\bin\Debug\Telegram.Bot.xml
+C:\Users\Pyrot\Desktop\FoxxoBot\obj\Debug\FoxxoBot.csprojAssemblyReference.cache
+C:\Users\Pyrot\Desktop\FoxxoBot\obj\Debug\FoxxoBot.csproj.CopyComplete
+C:\Users\Pyrot\Desktop\FoxxoBot\obj\Debug\FoxxoBot.exe
+C:\Users\Pyrot\Desktop\FoxxoBot\obj\Debug\FoxxoBot.pdb
