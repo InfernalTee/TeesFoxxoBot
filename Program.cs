@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Configuration;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
@@ -10,21 +12,53 @@ namespace FoxxoBot
 {
     class Program
     {
-        private const string API_KEY = "";
-        private static readonly TelegramBotClient Bot = new TelegramBotClient(API_KEY);
+        /// <summary>
+        /// The API key used to authenticate the bot against the Telegram API.
+        /// </summary>
+        private static readonly string API_KEY = ConfigurationManager.AppSettings["API_KEY"];
 
+        /// <summary>
+        /// The Telegram.Bot API bot client.
+        /// </summary>
+        private static TelegramBotClient Bot;
+
+        /// <summary>
+        /// The bot's user object (returned by the API).
+        /// </summary>
+        private static User BotUser;
+
+        /// <summary>
+        /// The entrypoint to the program.
+        /// </summary>
         public static void Main(string[] args)
         {
-            Bot.OnMessage += BotOnMessageReceived;
-            var botClient = new TelegramBotClient(API_KEY);
-            var me = botClient.GetMeAsync().Result;
-            Console.Title = me.Username;
-            Bot.StartReceiving(Array.Empty<UpdateType>());
-            Console.WriteLine($"Start listening for @{me.Username}");
-            Console.ReadLine();
-            Bot.StopReceiving();
-            Console.ReadKey();
+            // Define how the app is quit (Ctrl+C)
+            var exitEvent = new ManualResetEvent(false);
+            Console.CancelKeyPress += (sender, eventArgs) => {
+                eventArgs.Cancel = true;
+                exitEvent.Set();
+            };
 
+            // Quit immediately if the API key isn't filled in
+            // or we can't connect to Telegram for some reason
+            if (!ApiKeyIsValid() || !ConnectBotToTelegram()) {
+                Console.WriteLine("(Aborted. Press ENTER to quit...)");
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine($"Connected as {BotUser.Username} ({BotUser.Id}).");
+
+            // Hook up event handlers
+            Bot.OnMessage += BotOnMessageReceived;
+            Bot.StartReceiving(Array.Empty<UpdateType>());
+
+            Console.WriteLine("Bot ready! Press <Ctrl+C> or close this window to shut it down.");
+
+            // When Ctrl+C is pressed...
+            exitEvent.WaitOne();
+            Console.WriteLine("Exit signal received! Shutting down!");
+            Bot.StopReceiving();
         }
 
         /// <summary>
@@ -74,6 +108,37 @@ namespace FoxxoBot
                     // Do nothing.
                     break;
             }
+        }
+
+        /// <summary>
+        /// Returns true if the API key is filled in.
+        /// If not, logs the issue to the console and returns false.
+        /// </summary>
+        private static bool ApiKeyIsValid() {
+            if (string.IsNullOrWhiteSpace(API_KEY)) {
+                Console.Write("ERROR: Couldn't find a value for the API key. ");
+                Console.WriteLine("Please fill in the value in App.config and restart the bot. ");
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to connect to the Telegram API and populate Bot and BotUser.
+        /// Returns true if successful.
+        /// Logs the exception and returns false if unsuccessful.
+        /// </summary>
+        private static bool ConnectBotToTelegram() {
+            try {
+                Bot = new TelegramBotClient(API_KEY);
+                BotUser = Task.Run(async () => await Bot.GetMeAsync()).Result;
+            } catch (Exception e) {
+                Console.WriteLine($"ERROR! Issue connecting to Telegram API: {e}. Aborting.");
+                return false;
+            }
+            
+            return true;
         }
     }
 }
