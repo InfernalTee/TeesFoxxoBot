@@ -18,6 +18,11 @@ namespace FoxxoBot
         private static readonly string API_KEY = ConfigurationManager.AppSettings["API_KEY"];
 
         /// <summary>
+        /// If set, pauses (and waits for ENTER key) before shutting down for any reason.
+        /// </summary>
+        private static readonly bool INTERACTIVE = Convert.ToBoolean(ConfigurationManager.AppSettings["INTERACTIVE"]);
+
+        /// <summary>
         /// The Telegram.Bot API bot client.
         /// </summary>
         private static TelegramBotClient Bot;
@@ -42,8 +47,10 @@ namespace FoxxoBot
             // Quit immediately if the API key isn't filled in
             // or we can't connect to Telegram for some reason
             if (!ApiKeyIsValid() || !ConnectBotToTelegram()) {
-                Console.WriteLine("(Aborted. Press ENTER to quit...)");
-                Console.ReadLine();
+                if (INTERACTIVE) {
+                    Console.WriteLine("(Aborted. Press ENTER to quit...)");
+                    Console.ReadLine();
+                }
                 return;
             }
 
