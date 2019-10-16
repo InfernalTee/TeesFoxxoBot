@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -23,6 +24,19 @@ namespace FoxxoBot
         private static readonly bool INTERACTIVE = Convert.ToBoolean(ConfigurationManager.AppSettings["INTERACTIVE"]);
 
         /// <summary>
+        /// The bot should not respond to messages sent before it was switched on.
+        /// 
+        /// This constant establishes a deadline by which messages should be sent through
+        /// the API to the bot to enforce ignoring previous messages.
+        /// </summary>
+        private const int HANDLER_THRESHOLD_SECS = 3;
+
+        /// <summary>
+        /// Amount of time to wait between each chat for each call to /admin to be obeyed.
+        /// </summary>
+        private const int ADMIN_COMMAND_TIMEOUT_SECS = 5;
+
+        /// <summary>
         /// The Telegram.Bot API bot client.
         /// </summary>
         private static TelegramBotClient Bot;
@@ -31,6 +45,11 @@ namespace FoxxoBot
         /// The bot's user object (returned by the API).
         /// </summary>
         private static User BotUser;
+
+        /// <summary>
+        /// For each chat, stores the last time the /admin command was called.
+        /// </summary>
+        private static IDictionary<long, DateTime> LastAdminCommandTimePerChat = new Dictionary<long, DateTime>();
 
         /// <summary>
         /// The entrypoint to the program.
@@ -69,17 +88,6 @@ namespace FoxxoBot
         }
 
         /// <summary>
-        /// Given a ChatId, returns all admins in the chat.
-        /// Returns 
-        /// </summary>
-        private static async Task<User[]> GetAdminsOfChannel(ChatId chatId)
-        {
-            return (await Bot?.GetChatAdministratorsAsync(chatId) ?? new ChatMember[0])?
-                .Select(chatMember => chatMember.User)
-                .ToArray();
-        }
-
-        /// <summary>
         /// Controls how the bot will handle messages that it receieves (DMs, chat messages in
         /// chats that it is a member of, etc.). Hooks into TelegramBotClient.OnMessage event handler.
         /// </summary>
@@ -91,30 +99,53 @@ namespace FoxxoBot
             // Abort if the message is empty or isn't text.
             if (message?.Type != MessageType.Text) return;
 
-            // Who sent the message?
-            var pinger = message.From;
+            // Abort if the message was sent before we were switched on.
+            if (message.Date.AddSeconds(HANDLER_THRESHOLD_SECS) < DateTime.UtcNow) return;
 
-            // When was the message sent (in UTC time)?
-            var messageSendTime = message.Date;
+            // Abort if the message is not a command (starts with /)
+            var command = message.Text.Split(' ').First();
+            if (string.IsNullOrEmpty(command) || !command.StartsWith('/')) return;
 
-            // TODO: If messageSendTime is before we were turned on, abort.
-
-            switch (message.Text.Split(' ').First())
+            switch (command)
             {
                 case "/admin":
-                    // TODO: If messageSendTime is less than 5 seconds after /admin was called
-                    // TODO: last time, abort.
+                    // If messageSendTime is less than 5 seconds after /admin was called last time, abort.
+                    if (LastAdminCommandTimePerChat.ContainsKey(message.Chat.Id)) {
+                        if (
+                            LastAdminCommandTimePerChat[message.Chat.Id]
+                                .AddSeconds(ADMIN_COMMAND_TIMEOUT_SECS)
+                            <= DateTime.UtcNow
+                        ) return;
+                    }
+
+                    // Otherwise, log the current time as the last time /admin was called for this chat.
+                    LastAdminCommandTimePerChat[message.Chat.Id] = DateTime.UtcNow;
 
                     // Who are the admins in the channel the message was sent from?
                     var adminsInChannel = await GetAdminsOfChannel(message.Chat.Id);
 
-                    Console.WriteLine($"/admin called in {message.Chat.Title} ({message.Chat.Id})");
-                    await Bot.SendTextMessageAsync(message.Chat.Id, $"Admins @{adminsInChannel}, your service was requested by a {pinger}!");
+                    Console.WriteLine($"/admin called in {message.Chat.Title} ({message.Chat.Id}) at {DateTime.Now.ToString()}");
+                    await Bot.SendTextMessageAsync(
+                        message.Chat.Id, (
+                            $"Paging all admins: " +
+                            adminsInChannel.Select(user => $"@{user.Username}")
+                        ));
                     break;
                 default:
                     // Do nothing.
                     break;
             }
+        }
+
+        /// <summary>
+        /// Given a ChatId, returns all admins in the chat.
+        /// Returns 
+        /// </summary>
+        private static async Task<User[]> GetAdminsOfChannel(ChatId chatId)
+        {
+            return (await Bot?.GetChatAdministratorsAsync(chatId) ?? new ChatMember[0])?
+                .Select(chatMember => chatMember.User)
+                .ToArray();
         }
 
         /// <summary>

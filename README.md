@@ -13,7 +13,7 @@ To use it, add `@FoxxyFluffBot` to your chat on Telegram.
 <p align="left">
     <b>Jinhai</b><br />
     (tg: <code>@Jinhai</code>)
-</p><br />
+</p>
 
 ### To install
 Foxxobot is a .NET Core 3 app, written in C#. It requires the .NET Core 3 SDK (or newer).
