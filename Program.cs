@@ -133,7 +133,7 @@ namespace FoxxoBot
                     Console.WriteLine($"/admin called in {message.Chat.Title} ({message.Chat.Id}) at {DateTime.Now.ToString()}");
                     await Bot.SendTextMessageAsync(
                         message.Chat.Id, (
-                            $"Paging all admins: " +
+                            $"@{message.From.Username} is paging all admins: " +
                             String.Join(' ', adminsInChannel.Select(user => $"@{user.Username}"))
                         ));
                     break;
