@@ -109,7 +109,7 @@ namespace FoxxoBot
             switch (command)
             {
                 case "/admin":
-                    // If messageSendTime is less than 5 seconds after /admin was called last time, abort.
+                    // If messageSendTime is less than 10 seconds after /admin was called last time, abort.
                     if (LastAdminCommandTimePerChat.ContainsKey(message.Chat.Id)) {
                         if (
                             LastAdminCommandTimePerChat[message.Chat.Id]
