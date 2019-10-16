@@ -34,7 +34,7 @@ namespace FoxxoBot
         /// <summary>
         /// Amount of time to wait between each chat for each call to /admin to be obeyed.
         /// </summary>
-        private const int ADMIN_COMMAND_TIMEOUT_SECS = 5;
+        private const int ADMIN_COMMAND_TIMEOUT_SECS = 10;
 
         /// <summary>
         /// The Telegram.Bot API bot client.
@@ -103,7 +103,7 @@ namespace FoxxoBot
             if (message.Date.AddSeconds(HANDLER_THRESHOLD_SECS) < DateTime.UtcNow) return;
 
             // Abort if the message is not a command (starts with /)
-            var command = message.Text.Split(' ').First();
+            var command = message.Text.Split(' ').First().Replace($"@{BotUser.Username}", "");
             if (string.IsNullOrEmpty(command) || !command.StartsWith('/')) return;
 
             switch (command)
@@ -114,8 +114,14 @@ namespace FoxxoBot
                         if (
                             LastAdminCommandTimePerChat[message.Chat.Id]
                                 .AddSeconds(ADMIN_COMMAND_TIMEOUT_SECS)
-                            <= DateTime.UtcNow
-                        ) return;
+                            >= DateTime.UtcNow
+                        ) {
+                            Console.WriteLine(
+                                $"/admin called in {message.Chat.Title} ({message.Chat.Id}) at {DateTime.Now.ToString()}, " +
+                                $"but it was within {ADMIN_COMMAND_TIMEOUT_SECS} seconds of last time (ignoring)."
+                            );
+                            return;
+                        }
                     }
 
                     // Otherwise, log the current time as the last time /admin was called for this chat.
@@ -128,7 +134,7 @@ namespace FoxxoBot
                     await Bot.SendTextMessageAsync(
                         message.Chat.Id, (
                             $"Paging all admins: " +
-                            adminsInChannel.Select(user => $"@{user.Username}")
+                            String.Join(' ', adminsInChannel.Select(user => $"@{user.Username}"))
                         ));
                     break;
                 default:
