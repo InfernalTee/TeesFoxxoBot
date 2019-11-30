@@ -7,7 +7,6 @@ To use it, add `@FoxxyFluffBot` to your chat on Telegram.
 <p align="left">
     <b>Tee</b><br />
     • <a href="https://t.me/InfernalTee">Telegram</a> 
-    
     • <a href="https://github.com/InfernalTee">GitHub</a>
 </p>
 
@@ -15,7 +14,6 @@ To use it, add `@FoxxyFluffBot` to your chat on Telegram.
 <p align="left">
     <b>Jinhai</b><br />
     • <a href="https://t.me/Jinhai">Telegram</a> 
-    
     • <a href="https://github.com/OzuYatamutsu">GitHub</a>
 </p>
 
@@ -23,7 +21,6 @@ To use it, add `@FoxxyFluffBot` to your chat on Telegram.
 <p align="left">
     <b>Kourii</b><br />
     • <a href="https://t.me/KouriiRaiko">Telegram</a> 
-    
     • <a href="https://github.com/KouriiRaiko">GitHub</a>
 </p>
 
