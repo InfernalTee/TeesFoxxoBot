@@ -6,18 +6,31 @@ To use it, add `@FoxxyFluffBot` to your chat on Telegram.
 <img src="tee.jpg" width="100" align="left"/><br />
 <p align="left">
     <b>Tee</b><br />
-    (tg: <code>@InfernalTee</code>)
+    <a href="https://t.me/InfernalTee">Telegram</a> 
+    | <a href="https://github.com/InfernalTee">GitHub</a>
 </p>
 
 <img src="jinhai.jpg" width="100" align="left"/><br />
 <p align="left">
     <b>Jinhai</b><br />
-    (tg: <code>@Jinhai</code>)
+    <a href="https://t.me/Jinhai">Telegram</a> 
+    | <a href="https://github.com/OzuYatamutsu">GitHub</a>
 </p>
+
+<img src="kourii.jpg" width="100" align="left"/><br />
+<p align="left">
+    <b>Kourii</b><br />
+    <a href="https://t.me/KouriiRaiko">Telegram</a> 
+    | <a href="https://github.com/KouriiRaiko">GitHub</a>
+</p>
+
 
 ### To install
 Foxxobot is a .NET Core 3 app, written in C#. It requires the .NET Core 3 SDK (or newer).
 Fill in the value of `API_KEY` in `App.config` with the bot's API token before running.
+
+You will also need a channel to send the alerts to, which your administrators should subscribe to.
+Fill in the value of `CHANNEL_ID` in `App.config` with the ID of your channel.
 
 #### From the CLI
 Run `dotnet restore` from the project root to resolve all dependencies.

@@ -8,6 +8,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoxxoBot
 {
@@ -22,6 +23,11 @@ namespace FoxxoBot
         /// If set, pauses (and waits for ENTER key) before shutting down for any reason.
         /// </summary>
         private static readonly bool INTERACTIVE = Convert.ToBoolean(ConfigurationManager.AppSettings["INTERACTIVE"]);
+
+        /// <summary>
+        /// The channel ID is the location to send the admin alert notifications to.
+        /// </summary>
+        private static readonly string CHANNEL_ID = ConfigurationManager.AppSettings["CHANNEL_ID"];
 
         /// <summary>
         /// The bot should not respond to messages sent before it was switched on.
@@ -127,31 +133,20 @@ namespace FoxxoBot
                     // Otherwise, log the current time as the last time /admin was called for this chat.
                     LastAdminCommandTimePerChat[message.Chat.Id] = DateTime.UtcNow;
 
-                    // Who are the admins in the channel the message was sent from?
-                    var adminsInChannel = await GetAdminsOfChannel(message.Chat.Id);
-
                     Console.WriteLine($"/admin called in {message.Chat.Title} ({message.Chat.Id}) at {DateTime.Now.ToString()}");
                     await Bot.SendTextMessageAsync(
-                        message.Chat.Id, (
-                            $"@{message.From.Username} is paging all admins: " +
-                            String.Join(' ', adminsInChannel.Select(user => $"@{user.Username}"))
-                        ));
+                        chatId: CHANNEL_ID,
+                        text: $"@{message.From.Username} is requesting administrators!",
+                        replyMarkup: new InlineKeyboardMarkup(InlineKeyboardButton.WithUrl(
+                        "View Alert",
+                        $"https://t.me/{message.Chat.Username}/{message.MessageId}"
+                        ))
+                    );
                     break;
                 default:
                     // Do nothing.
                     break;
             }
-        }
-
-        /// <summary>
-        /// Given a ChatId, returns all admins in the chat.
-        /// Returns 
-        /// </summary>
-        private static async Task<User[]> GetAdminsOfChannel(ChatId chatId)
-        {
-            return (await Bot?.GetChatAdministratorsAsync(chatId) ?? new ChatMember[0])?
-                .Select(chatMember => chatMember.User)
-                .ToArray();
         }
 
         /// <summary>
