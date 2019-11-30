@@ -6,22 +6,25 @@ To use it, add `@FoxxyFluffBot` to your chat on Telegram.
 <img src="tee.jpg" width="100" align="left"/><br />
 <p align="left">
     <b>Tee</b><br />
-    - <a href="https://t.me/InfernalTee">Telegram</a> 
-    - <a href="https://github.com/InfernalTee">GitHub</a>
+    • <a href="https://t.me/InfernalTee">Telegram</a> 
+    
+    • <a href="https://github.com/InfernalTee">GitHub</a>
 </p>
 
 <img src="jinhai.jpg" width="100" align="left"/><br />
 <p align="left">
     <b>Jinhai</b><br />
-    - <a href="https://t.me/Jinhai">Telegram</a> 
-    - <a href="https://github.com/OzuYatamutsu">GitHub</a>
+    • <a href="https://t.me/Jinhai">Telegram</a> 
+    
+    • <a href="https://github.com/OzuYatamutsu">GitHub</a>
 </p>
 
 <img src="kourii.jpg" width="100" align="left"/><br />
 <p align="left">
     <b>Kourii</b><br />
-    - <a href="https://t.me/KouriiRaiko">Telegram</a> 
-    - <a href="https://github.com/KouriiRaiko">GitHub</a>
+    • <a href="https://t.me/KouriiRaiko">Telegram</a> 
+    
+    • <a href="https://github.com/KouriiRaiko">GitHub</a>
 </p>
 
 
