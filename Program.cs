@@ -25,7 +25,7 @@ namespace FoxxoBot
         private static readonly bool INTERACTIVE = Convert.ToBoolean(ConfigurationManager.AppSettings["INTERACTIVE"]);
 
         /// <summary>
-        /// If set, pauses (and waits for ENTER key) before shutting down for any reason.
+        /// The channel ID is the location to send the admin alert notifications to.
         /// </summary>
         private static readonly string CHANNEL_ID = ConfigurationManager.AppSettings["CHANNEL_ID"];
 
@@ -37,7 +37,7 @@ namespace FoxxoBot
         /// </summary>
         private const int HANDLER_THRESHOLD_SECS = 3;
 
-        /// <summary>1
+        /// <summary>
         /// Amount of time to wait between each chat for each call to /admin to be obeyed.
         /// </summary>
         private const int ADMIN_COMMAND_TIMEOUT_SECS = 10;
