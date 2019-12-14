@@ -27,7 +27,7 @@ namespace FoxxoBot
         /// <summary>
         /// The chat ID is the chat where admin alert commands can be sent from.
         /// </summary>
-        private static readonly string CHAT_ID = ConfigurationManager.AppSettings["CHAT_ID"];
+        private static readonly long CHAT_ID = long.Parse(ConfigurationManager.AppSettings["CHAT_ID"]);
 
         /// <summary>
         /// The channel ID is the location to send the admin alert notifications to.
