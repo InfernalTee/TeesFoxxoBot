@@ -121,7 +121,7 @@ namespace FoxxoBot
             {
                 case "/admin":
                     // If the admin command is sent from an unauthorized channel, abort.
-                    if (message.Chat.Id != CHAT_ID) {
+                    if (message.Chat.Id.ToString() != CHAT_ID) {
                         return;
                     }
                     
