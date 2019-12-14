@@ -25,6 +25,11 @@ namespace FoxxoBot
         private static readonly bool INTERACTIVE = Convert.ToBoolean(ConfigurationManager.AppSettings["INTERACTIVE"]);
 
         /// <summary>
+        /// The chat ID is the chat where admin alert commands can be sent from.
+        /// </summary>
+        private static readonly string CHAT_ID = ConfigurationManager.AppSettings["CHAT_ID"];
+
+        /// <summary>
         /// The channel ID is the location to send the admin alert notifications to.
         /// </summary>
         private static readonly string CHANNEL_ID = ConfigurationManager.AppSettings["CHANNEL_ID"];
@@ -115,6 +120,12 @@ namespace FoxxoBot
             switch (command)
             {
                 case "/admin":
+                    // If the admin command is sent from an unauthorized channel, abort.
+                    if (message.Chat.Id != CHAT_ID) {
+                        return;
+                    }
+                    
+
                     // If messageSendTime is less than 10 seconds after /admin was called last time, abort.
                     if (LastAdminCommandTimePerChat.ContainsKey(message.Chat.Id)) {
                         if (
